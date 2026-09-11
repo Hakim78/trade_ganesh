@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+venv/
+.venv/
+
+# Secrets : uniquement .env.example est commité
+.env
+.env.*
+!.env.example
+
+# Données brutes et sorties : jamais commitées (cf. CLAUDE.md)
+data/
+outputs/
+
+# Rapports générés par les scripts des skills (position-sizer, backtest-expert, ...)
+reports/
+
+# Claude Code local
+CLAUDE.local.md
+.claude/settings.local.json
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

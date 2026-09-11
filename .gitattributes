@@ -1,0 +1,11 @@
+# Fins de ligne : LF partout, indispensable pour les hooks bash sous Windows (autocrlf)
+* text=auto
+*.sh text eol=lf
+.claude/hooks/pre-commit text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+Makefile text eol=lf
+.env.example text eol=lf
