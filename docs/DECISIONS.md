@@ -11,3 +11,4 @@ Une ligne par décision, datée, ajoutée en bas. Règle de `CLAUDE.md` (section
 - 2026-09-11 — Indicateurs implémentés en pandas/numpy dans `strategy/strategy.py` (ni `openalgo.ta`, ni TA-Lib) pour garder la stratégie pure et sans dépendance broker ou marché.
 - 2026-09-11 — Sorties des scripts de skills dans `reports/` (gitignored) ; sorties du projet dans `outputs/` (gitignored) ; données brutes dans `data/` (gitignored).
 - 2026-09-11 — Dépôt distant : https://github.com/Hakim78/trade_ganesh (branche `main`).
+- 2026-09-15 — Stratégie source = script Pine v5 de l'ami, conservé verbatim dans `docs/STRATEGY_SOURCE.pine` ; `docs/STRATEGY.md` en est la traduction règle par règle. En cas de divergence, le Pine fait foi après validation de l'ami. Les points non déductibles du script (symbole, timeframe, unité TP/SL, fuseau horaire) sont marqués À CONFIRMER et bloquent le code.

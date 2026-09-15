@@ -1,0 +1,50 @@
+//@version=5
+// Script reçu le 2026-09-15, conservé tel quel : source de vérité de docs/STRATEGY.md.
+// Seule modification : ces trois lignes de commentaire. Les deux appels strategy.entry(...)
+// sous les `if` étaient sans indentation dans la version reçue (ils sont reproduits ainsi).
+strategy("Liquidity Sweep + VWAP (Optimized)", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+lookback = input.int(10)
+tpPoints = input.int(30)
+slPoints = input.int(15)
+
+// === VWAP ===
+vwapValue = ta.vwap(close)
+
+// === EMA ===
+ema50 = ta.ema(close, 50)
+
+// === Previous Levels ===
+prevHigh = ta.highest(high, lookback)
+prevLow = ta.lowest(low, lookback)
+
+// === Sweeps ===
+sweepHigh = high > prevHigh[1] and close < prevHigh[1]
+sweepLow = low < prevLow[1] and close > prevLow[1]
+
+// === Trend ===
+bullTrend = close > ema50
+bearTrend = close < ema50
+
+// === NY Session ===
+nySession = (hour >= 14 and hour < 18)
+
+// === Conditions ===
+buySignal = sweepLow and close > vwapValue and bullTrend and nySession
+sellSignal = sweepHigh and close < vwapValue and bearTrend and nySession
+
+// === Entries ===
+if (buySignal)
+strategy.entry("BUY", strategy.long)
+
+if (sellSignal)
+strategy.entry("SELL", strategy.short)
+
+// === Exit ===
+strategy.exit("TP/SL BUY", from_entry="BUY", profit=tpPoints, loss=slPoints)
+strategy.exit("TP/SL SELL", from_entry="SELL", profit=tpPoints, loss=slPoints)
+
+// === Plot ===
+plot(vwapValue)
+plot(ema50)
