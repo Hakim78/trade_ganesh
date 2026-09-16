@@ -14,7 +14,7 @@ Exécuté avant chaque commit. Refuse le commit si :
 | 2 | Clé Alpaca en dur (`ALPACA_*KEY=…`, identifiant `PK…`/`AK…`) ou endpoint live `api.alpaca.markets` (hors `paper-api`) | 5, 6 |
 | 3 | Motif de look-ahead dans un `.py` applicatif : `.shift(-n)`, `rolling(center=True)`, `iloc[i+1]` | 1 |
 | 4 | Coûts à zéro codés en dur : `fees=0`, `slippage=0`, `commission=0` | 2 |
-| 5 | `make test` échoue (uniquement si un `.py` est indexé et que le `Makefile` a une cible `test`) | Commandes |
+| 5 | `pytest` échoue (uniquement si un `.py` est indexé ; utilise `.venv` s'il existe, `make` n'est pas requis) | Commandes |
 
 Les vérifications 3 et 4 ignorent `tests/` et `.claude/`. Elles portent sur le **contenu indexé**
 (`git show :fichier`), pas sur le fichier de travail.

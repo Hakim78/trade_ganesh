@@ -25,9 +25,7 @@ Règle d'or : `CLAUDE.md` = quoi et pourquoi, skills = comment.
 | `position-sizer` | idem | Live (Phase 5) | Calcul de taille de position : fixed fractional, ATR, demi-Kelly, contraintes de concentration. | Note d'adaptation. |
 | `drawdown-circuit-breaker` | idem | Live (Phase 5) | Règles de coupe-circuit : perte journalière max, cooldown après série perdante, limites hebdo/mensuelles en heure de New York. | Note d'adaptation. |
 
-Skill à créer plus tard, **une fois `docs/STRATEGY.md` rempli** : `friend-strategy`, avec le skill
-officiel `skill-creator` (plugin `example-skills` du marketplace `anthropics/skills`). Il deviendra la
-source de vérité de la stratégie (règles, invariants, tests).
+| `friend-strategy` | projet (2026-09-16) | Source de vérité de la stratégie | Où sont les règles, table règle → code → test, procédure pour modifier une règle sans casser les invariants. | Skill maison, écrit après la traduction du script Pine de l'ami. |
 
 ## Skills et fichiers rejetés
 

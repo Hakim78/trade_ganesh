@@ -1,0 +1,60 @@
+# config.yaml — source unique des paramètres du projet (CLAUDE.md : zéro paramètre en dur dans le code).
+# Les valeurs de la stratégie viennent de docs/STRATEGY.md ; les choix faits à la place de l'ami sont
+# datés dans docs/DECISIONS.md et restent réversibles ici.
+
+instrument:
+  symbol: QQQ                    # Nasdaq-100 ETF, choisi le 2026-09-16 (paper Alpaca, données gratuites)
+  secondary_symbols: [SPY]       # test de généralisation (S&P 500), jamais utilisé pour régler quoi que ce soit
+  exchange_tz: America/New_York
+  rth_start: "09:30"             # bougies de séance uniquement (comme un graphique TradingView sans extended hours)
+  rth_end: "16:00"
+  tick_size: 0.01
+
+timeframe: 5min
+
+strategy:
+  lookback: 10                   # plus hauts / plus bas des 10 bougies précédentes
+  ema_len: 50
+  vwap_source: close             # ta.vwap(close) dans le script de l'ami
+  vwap_anchor: session           # remise à zéro à l'ouverture de séance (09:30 ET)
+  session_filter:                # `hour >= 14 and hour < 18` du script, lu en UTC (voir DECISIONS.md)
+    tz: UTC
+    start_hour: 14               # inclus
+    end_hour: 18                 # exclu
+
+exits:
+  tp_points: 30                  # tpPoints du script : points d'indice Nasdaq-100
+  sl_points: 15                  # slPoints
+  index_reference: 29000         # niveau NDX de référence (29 159 le 2026-09-16) : 30 pts = 0,103 % du prix, 15 pts = 0,052 %
+  same_bar_conflict: sl_first    # TP et SL touchés dans la même bougie : hypothèse pessimiste
+
+execution:
+  fill: next_open                # signal à la clôture de t, exécution à l'ouverture de t+1 (Pine par défaut)
+  fees_pct: 0.0001               # 0,01 % par côté : frais réglementaires SEC/FINRA, commission Alpaca nulle
+  slippage_pct: 0.0001           # 0,01 % par côté : spread QQQ + impact, conservateur pour un ordre au marché
+  init_cash: 100000
+  size_pct_equity: 10            # default_qty_value = 10 (% de l'equity)
+  size_granularity: 1            # actions entières
+
+data:
+  source: yfinance               # yfinance : 60 derniers jours en 5 min, sans clé. alpaca : historique complet, clés dans .env
+  cache_dir: data
+  alpaca_feed: iex               # sip si l'abonnement le permet
+
+split:
+  in_sample: {start: "2018-01-01", end: "2024-12-31"}
+  out_of_sample: {start: "2025-01-01", end: "2026-06-30"}   # consommé une seule fois
+  smoke: {days: 60}                                          # fenêtre de mise au point, hors étude
+  min_trades: 200
+  min_effective_obs: 30
+
+live:
+  paper_only: true
+  base_url: https://paper-api.alpaca.markets
+  data_feed: iex
+  daily_drawdown_halt_pct: 2.0   # coupe-circuit : plus aucune entrée si la perte du jour dépasse 2 % de l'equity
+  poll_seconds: 5
+  outputs_dir: outputs/live
+
+dashboard:
+  max_bars: 20000                # nombre maximal de bougies exportées dans outputs/dashboard.json

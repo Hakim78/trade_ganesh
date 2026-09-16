@@ -1,0 +1,40 @@
+# Trois services (CLAUDE.md) :
+#   docker compose run backtest      → backtest batch, écrit ./outputs
+#   docker compose up live           → paper trading Alpaca en continu (clés dans .env)
+#   docker compose up dashboard      → tableau de bord React sur http://localhost:8080
+# Période du backtest : PERIOD=smoke (défaut, 60 j yfinance) | in_sample | out_of_sample (clés Alpaca requises).
+
+services:
+  backtest:
+    build: .
+    image: ganesh-trading:latest
+    command: ["python", "-m", "backtest.run", "--period", "${PERIOD:-smoke}"]
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+
+  live:
+    build: .
+    image: ganesh-trading:latest
+    command: ["python", "-m", "live.run"]
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+    restart: unless-stopped
+
+  dashboard:
+    build: ./frontend
+    image: ganesh-trading-dashboard:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./outputs:/data:ro
+    restart: unless-stopped

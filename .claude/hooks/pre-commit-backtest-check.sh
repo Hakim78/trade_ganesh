@@ -69,10 +69,12 @@ while IFS= read -r f; do
 done <<< "$staged"
 
 # --- 5. Tests ---------------------------------------------------------------------------------
-if [ "${SKIP_TESTS:-0}" != "1" ] && [ -f Makefile ] && grep -qE '^test:' Makefile \
-   && printf '%s\n' "$staged" | grep -Eq '\.py$'; then
-  yellow "→ make test (SKIP_TESTS=1 pour sauter)"
-  if ! make test; then red "BLOQUÉ : make test a échoué"; fail=1; fi
+if [ "${SKIP_TESTS:-0}" != "1" ] && [ -f pyproject.toml ] && printf '%s\n' "$staged" | grep -Eq '\.py$'; then
+  if [ -x .venv/Scripts/python.exe ]; then PY=.venv/Scripts/python.exe
+  elif [ -x .venv/bin/python ]; then PY=.venv/bin/python
+  else PY=python; fi
+  yellow "→ $PY -m pytest (SKIP_TESTS=1 pour sauter)"
+  if ! "$PY" -m pytest -q; then red "BLOQUÉ : les tests échouent"; fail=1; fi
 fi
 
 if [ "$fail" -ne 0 ]; then
